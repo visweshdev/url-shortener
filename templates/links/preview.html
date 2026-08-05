@@ -1,0 +1,79 @@
+{% extends 'links/base.html' %}
+
+{% block title %}Preview - {{ title }}{% endblock %}
+
+{% block navextra %}
+<li class="nav-item">
+  <a class="nav-link active fw-bold" href="{{ request.get_full_path }}">Preview</a>
+</li>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8 col-xl-7">
+    <div class="glass-panel p-4 p-md-5 text-center">
+      
+      <div class="mb-4">
+        <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-success bg-opacity-25 p-3 mb-3" style="width: 80px; height: 80px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="#10b981" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+          </svg>
+        </div>
+        <h2 class="fw-bold mb-2">Success!</h2>
+        <p class="text-white-50 fs-5">Your short URL is ready to share.</p>
+      </div>
+
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-success alert-dismissible fade show bg-success text-white border-0" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <div class="position-relative mt-4 mb-5">
+        <label class="form-label text-start d-block ms-1 fw-semibold text-white-50">Shortened URL</label>
+        <div class="input-group input-group-lg shadow-sm rounded-4">
+          <input type="text" id="shortened-url" readonly class="form-control glass-input text-center fs-4 fw-bold py-3 text-info" value="{{ absolute_short_url }}" style="cursor: pointer;" title="Click to copy!" />
+          <button class="btn btn-glass-secondary px-4" type="button" id="copy-btn">Copy</button>
+        </div>
+      </div>
+
+      <div class="p-4 rounded-4 bg-black bg-opacity-25 border border-light border-opacity-10 mb-5 text-start">
+        <p class="text-white-50 mb-2 small fw-semibold text-uppercase tracking-wider">Redirects to:</p>
+        <div id="url" class="fs-6 text-break text-white">{{ url }}</div>
+      </div>
+      
+      <div class="d-flex flex-column flex-md-row gap-3 justify-content-center mt-4">
+        <a class="btn btn-glass px-4 py-3 fw-bold" href="{{ url }}">Proceed to Link</a>
+        <a class="btn btn-glass-secondary px-4 py-3" href="{% url 'links:index' %}">Shorten Another</a>
+      </div>
+      
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block bodyextra %}
+<script>
+document.getElementById('shortened-url').addEventListener('click', function() {
+  this.select();
+});
+
+document.getElementById('copy-btn').addEventListener('click', function() {
+  const urlInput = document.getElementById('shortened-url');
+  urlInput.select();
+  urlInput.setSelectionRange(0, 99999); /* For mobile devices */
+  navigator.clipboard.writeText(urlInput.value).then(() => {
+    const originalText = this.innerText;
+    this.innerText = 'Copied!';
+    this.classList.add('bg-success', 'border-success');
+    setTimeout(() => {
+      this.innerText = originalText;
+      this.classList.remove('bg-success', 'border-success');
+    }, 2000);
+  });
+});
+</script>
+{% endblock %}

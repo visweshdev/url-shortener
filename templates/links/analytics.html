@@ -1,0 +1,93 @@
+{% extends 'links/base.html' %}
+
+{% block title %}Analytics - {{ title }}{% endblock %}
+
+{% block analytics_nav %}active fw-bold{% endblock %}
+
+{% block content %}
+<div class="text-center mb-5">
+  <h1 class="display-5 fw-bold mb-3">Link Analytics</h1>
+  <p class="lead text-white-50">Global view of all shortened URLs and their performance.</p>
+</div>
+
+<div class="glass-panel p-4 mb-5">
+  {% if links %}
+    <div class="table-responsive">
+      <table class="table table-glass table-hover align-middle mb-0">
+        <thead>
+          <tr>
+            <th scope="col" class="py-3 ps-3">Original URL</th>
+            <th scope="col" class="py-3">Created (UTC)</th>
+            <th scope="col" class="py-3 text-center">Short Link</th>
+            <th scope="col" class="py-3 text-center pe-3">Clicks</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for link in links %}
+          <tr>
+            <td class="text-break ps-3 py-3" style="max-width: 300px;">
+              <a href="{{ link.url }}" class="text-truncate d-block text-white text-decoration-none hover-underline" title="{{ link.url }}">
+                {{ link.get_long_url_truncated }}
+              </a>
+            </td>
+            <td class="text-white-50 py-3">{{ link.get_date_created_human_friendly }}</td>
+            <td class="text-center py-3">
+              <a href="{{ link.get_preview_path }}" class="badge bg-light text-dark text-decoration-none px-3 py-2 rounded-pill shadow-sm fs-6">
+                {{ link.alias }}
+              </a>
+            </td>
+            <td class="text-center pe-3 py-3">
+              <span class="badge rounded-pill bg-danger bg-opacity-25 text-white border border-danger border-opacity-50 px-3 py-2 fs-6">
+                {{ link.clicks_count }}
+              </span>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    
+    {% if max_pages > 1 %}
+    <div class="mt-4 pt-3 border-top border-light border-opacity-10 d-flex justify-content-center">
+      <nav aria-label="Page navigation">
+        <ul class="pagination pagination-glass mb-0">
+          {# Left #}
+          <li class="page-item {% if page == 1 %}disabled{% endif %}">
+            <a class="page-link" {% if page != 1 %} href='?page={{ page|add:"-1" }}'{% endif %} aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+
+          {# Pages #}
+          {% for i in count_pages %}
+            <li class="page-item {% if forloop.counter == page %}active{% endif %}">
+              <a class="page-link" href="?page={{ forloop.counter }}">{{ forloop.counter }}</a>
+            </li>
+          {% endfor %}
+
+          {# Right #}
+          <li class="page-item {% if page == max_pages %}disabled{% endif %}">
+            <a class="page-link" {% if page != max_pages %} href='?page={{ page|add:"1" }}'{% endif %} aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    {% endif %}
+
+  {% else %}
+    <div class="text-center py-5">
+      <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-light bg-opacity-10 p-4 mb-4">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-link-45deg text-white-50" viewBox="0 0 16 16">
+          <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/>
+          <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z"/>
+        </svg>
+      </div>
+      <h2 class="fw-bold mb-2">No Links Found</h2>
+      <p class="text-white-50 mb-4">It looks like no URLs have been shortened yet.</p>
+      <a class="btn btn-glass px-4 py-3 fw-bold" href="{% url 'links:index' %}">Shorten Your First URL</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
