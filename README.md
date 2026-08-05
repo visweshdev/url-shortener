@@ -5,7 +5,7 @@
 
 A simple, modern Django-based URL shortening web application.
 
-<img src="docs/screenshot.png" alt="URL Shortener Screenshot" />
+<img src="docs/uiscreenshot.png" alt="URL Shortener Screenshot" />
 
 ## Architecture Highlights
 - **Framework**: Django 
