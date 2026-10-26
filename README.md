@@ -1,8 +1,5 @@
 # URL Shortener
 
-[![CI](https://github.com/smtchahal/url-shortener/actions/workflows/ci.yml/badge.svg)](https://github.com/smtchahal/url-shortener/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/smtchahal/url-shortener/branch/master/graph/badge.svg)](https://codecov.io/gh/smtchahal/url-shortener)
-
 A simple, modern Django-based URL shortening web application.
 
 <img src="docs/uiscreenshot.png" alt="URL Shortener Screenshot" />
